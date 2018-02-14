@@ -67,6 +67,6 @@ app.post('/api', (req, res) => {
 
 app.use(express.static('app'))
 
-app.listen('8080')
-console.log('Magic happens on port 8080');
+app.listen(process.env.PORT)
+console.log('Magic happens on port', process.env.PORT);
 exports = module.exports = app;
