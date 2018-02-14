@@ -1,0 +1,37 @@
+.hide {
+    display: none;
+}
+.wrapper {
+    max-width: 960px;
+    margin: auto;
+    padding: 1em;
+    padding-bottom: 3em;
+}
+#io-seperator {
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+.output {
+    font-weight: bold;
+}
+footer#mainFooter {
+    background: #eee;
+    padding: 1em;
+    margin-top: 2em;
+}
+#mainFooterWrapper {
+    max-width: 960px;
+    margin: auto;
+  
+}
+
+@media only screen and (min-width : 768px) {
+    div#loginInputs {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    div#loginInputs > div {
+        width: 49%;
+    }
+}
