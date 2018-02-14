@@ -34,10 +34,13 @@
                     <div class="col-sm">
                             Never looked at your meal plan account before? Set your pin for the first time <a href="https://mealacct.mcmaster.ca/OneWeb/Account/ResetPIN" target="_blank" rel="noopener">here</a>
                     </div>
+                    <div class="col-sm-auto" v-if="trns">
+                            <a href="#" class="badge badge-secondary" v-on:click.prevent="clearData">Logout</a>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="card-body">
+        <div class="card-body" v-if="!trns">
             <form id="login" class="form-group" method="POST">
                 <div id="loginInputs">
                     <div>
@@ -51,7 +54,10 @@
                 </div>
                 </div>
                 <br>
-                <button v-on:click="fetchData" type="submit" class="form-control btn btn-primary">Get transactions</button>
+                <button v-on:click="fetchData" type="submit" class="form-control btn btn-primary">
+                        <span v-if="loadingData">Loading...</span>
+                        <span v-else="loadingData">Get transactions</span
+                </button>
             </form>
         </div>
     </div>

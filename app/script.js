@@ -16,15 +16,15 @@ var vm = new Vue({
 		numWeekendsAway: 0,
 		payingDays: 0,
 		moreOptions: false,
-		showHelp: false,
 		studentNumber: null,
 		accountPin: null,
 		trns: null,
+		loadingData: false,
 		accountSetup: []
 	},
 	methods: {
 		fetchData: function() {
-					
+			this.loadingData = true;
 			console.log("Getting transaction history....")
 			fetch('../api', {
 				method: 'POST',
@@ -37,6 +37,7 @@ var vm = new Vue({
 			.then((resp) => resp.json())
 			.then((data) => {
 				console.log("Transaction history acquired!")
+				this.loadingData = false;
 				this.trns = [];
 				this.accountSetup = [];
 				for(i = 0; i < data.length; i++) {
@@ -44,11 +45,18 @@ var vm = new Vue({
 						this.accountSetup.push(data[i])
 					} else {
 						this.trns = data.slice(i);
+						
 						return true;
 					}
 				}
 			})
 			.catch((err)=>console.log(err))
+		},
+		clearData: function() {
+			this.trns = null,
+			this.accountSetup = [],
+			this.studentNumber = null,
+			this.accountPin = null
 		}
 	},
 	computed: {
