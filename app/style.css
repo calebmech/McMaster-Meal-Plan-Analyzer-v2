@@ -1,3 +1,10 @@
+body {
+    position: relative;
+    padding-bottom: 8em;
+    min-height: 100vh;
+    margin: 0;
+}
+
 .hide {
     display: none;
 }
@@ -18,6 +25,10 @@ footer#mainFooter {
     background: #eee;
     padding: 1em;
     margin-top: 2em;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 #mainFooterWrapper {
     max-width: 960px;
