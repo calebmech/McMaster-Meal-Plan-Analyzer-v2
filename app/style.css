@@ -3,6 +3,8 @@ body {
   padding-bottom: 8em;
   min-height: 100vh;
   margin: 0;
+  width: calc(100vw - 34px);
+  padding-left: 34px;
 }
 
 .hide {
@@ -44,4 +46,13 @@ footer#mainFooter {
   div#loginInputs > div {
     width: 49%;
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }

@@ -51,6 +51,7 @@
 						</div>
 					</div>
 				</div>
+
 				<div class="card-body" v-if="!trns">
 					<form id="login" class="form-group" method="POST">
 						<div id="loginInputs">
@@ -95,12 +96,13 @@
 					</div>
 				</div>
 
-				<transition name="bounce">
-					<div class="card">
-						<div class="card-header">
-							<a href="#" v-if="moreOptions" v-on:click.prevent="moreOptions = false">Fewer Options</a>
-							<a href="#" v-else v-on:click.prevent="moreOptions = true">More Options</a>
-						</div>
+
+				<div class="card">
+					<div class="card-header">
+						<a href="#" v-if="moreOptions" v-on:click.prevent="moreOptions = false">Fewer Options</a>
+						<a href="#" v-else v-on:click.prevent="moreOptions = true">More Options</a>
+					</div>
+					<transition name="fade">
 						<div id="moreOptions" class="card-body" v-if="moreOptions">
 							<div class="form-group">
 								<label for="extraDaysAway">Extra Days Away:</label>
@@ -113,43 +115,47 @@
 								<label for="lastExamDayWinter">Last winter exam day:</label>
 								<input type="number" name="lastExamDayWinter" id="lastExamDayWinter" placeholder="Default: 26" v-model="lastExamDayW" class="form-control">
 							</div>
-						</div>
+					</transition>
 					</div>
-				</transition>
+				</div>
 			</div>
 		</form>
 
-		<div id="output-data" v-if="trns">
-			<hr id="io-seperator">
+		<transition name="fade">
+			<div id="output-data" v-if="trns">
+				<hr id="io-seperator">
 
-			<p class="h3" id="avgSpent">It costs you
-				<span class="output" v-bind:style="{ color: spendingColor }">${{ costPerDay }}</span> to eat for a day</p>
+				<p class="h3" id="avgSpent">It costs you
+					<span class="output" v-bind:style="{ color: spendingColor }">${{ costPerDay }}</span> to eat for a day</p>
 
-			<p class="h4" id="allowedSpending">You are allowed to spend
-				<span class="output">${{ allowedSpending }}</span> per day</p>
-			<br>
-			<ul class="list-group">
-				<li class="list-group-item">
-					<div class="row justify-content-start">
-						<span class="col-md-auto">On average, you spend
-							<span class="output">${{ avgSpent }}</span> per day &emsp;</span>
-						<span class="text-muted font-italic col-md-auto">This includes days that you don't purchase anything</span>
-					</div>
-				</li>
-				<li class="list-group-item">You have spent
-					<span class="output">${{ totalSpent }}</span> in total and
-					<span class="output">${{ pastWeekAmount }}</span> in the past 7 days</li>
-				<li class="list-group-item">You have
-					<span class="output">${{ amountRemaining }}</span> remaining</li>
-				<li v-if="remainingAmountAvg > 0" class="list-group-item">If you continue with your current spending, you will have
-					<span class="output">${{ remainingAmountAvg }}</span> remaining at the end of the year</li>
-				<li v-else class="list-group-item">If you continue with your current spending, you will need to add
-					<span class="output">${{ -remainingAmountAvg }}</span> to your account</li>
-			</ul>
+				<p class="h4" id="allowedSpending">You are allowed to spend
+					<span class="output">${{ allowedSpending }}</span> per day</p>
+				<br>
+				<ul class="list-group">
+					<li class="list-group-item">
+						<div class="row justify-content-start">
+							<span class="col-md-auto">On average, you spend
+								<span class="output">${{ avgSpent }}</span> per day &emsp;</span>
+							<span class="text-muted font-italic col-md-auto">This includes days that you don't purchase anything</span>
+						</div>
+					</li>
+					<li class="list-group-item">You have spent
+						<span class="output">${{ totalSpent }}</span> in total and
+						<span class="output">${{ pastWeekAmount }}</span> in the past 7 days</li>
+					<li class="list-group-item">You have
+						<span class="output">${{ amountRemaining }}</span> remaining</li>
+					<li v-if="remainingAmountAvg > 0" class="list-group-item">If you continue with your current spending, you will have
+						<span class="output">${{ remainingAmountAvg }}</span> remaining at the end of the year</li>
+					<li v-else class="list-group-item">If you continue with your current spending, you will need to add
+						<span class="output">${{ -remainingAmountAvg }}</span> to your account</li>
+				</ul>
 
-		</div>
+			</div>
+		</transition>
+
 
 	</div>
+	</transition>
 
 	<footer id="mainFooter">
 		<div id="mainFooterWrapper">
