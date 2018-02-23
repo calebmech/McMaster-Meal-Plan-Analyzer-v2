@@ -74,6 +74,10 @@
 							</span>
 						</div>
 						<div class="col-sm-auto" v-if="trns">
+							<a href="#" class="badge badge-primary" v-on:click.prevent="fetchData">
+								<span v-if="loadingData">Loading...</span>
+								<span v-else="loadingData">Reload</span>
+							</a>
 							<a href="#" class="badge badge-secondary" v-on:click.prevent="clearData">Logout</a>
 						</div>
 					</div>
