@@ -1,6 +1,6 @@
 body {
   position: relative;
-  padding-bottom: 8em;
+  padding: 1em .5em 8em .5em;
   min-height: 100vh;
   margin: 0;
 }
