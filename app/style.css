@@ -3,8 +3,6 @@ body {
   padding-bottom: 8em;
   min-height: 100vh;
   margin: 0;
-  width: calc(100vw - 34px);
-  padding-left: 34px;
 }
 
 .hide {

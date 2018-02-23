@@ -6,11 +6,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<meta name="Description" content="An app to analyze the transaction history from McMaster's meal plan service and provide relevant information.">
+	<meta name="theme-color" content="#007bff">
 	<title>Meal Plan Analyzer</title>
 	<link rel="stylesheet" href="style.css">
-	<script src="https://unpkg.com/vue@2.5.13/dist/vue.min.js"></script>
+	<link rel="manifest" href="/manifest.json">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
 	 crossorigin="anonymous">
+	<script src="https://unpkg.com/vue@2.5.13/dist/vue.min.js"></script>
+	<script src="script.js" async></script>
 	<script>
 		(function (i, s, o, g, r, a, m) {
 			i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
@@ -22,7 +25,19 @@
 		ga('create', 'UA-106552071-1', 'auto');
 		ga('send', 'pageview');
 
-	</script>
+		if ('serviceWorker' in navigator) {
+			window.addEventListener('load', function () {
+				navigator.serviceWorker.register('/sw.js').then(function (registration) {
+					// Registration was successful
+					console.log('ServiceWorker registration successful with scope: ', registration.scope);
+				}, function (err) {
+					// registration failed :(
+					console.log('ServiceWorker registration failed: ', err);
+				});
+			});
+		}
+
+</script>
 </head>
 
 <body>
@@ -33,11 +48,12 @@
 		<br>
 		<form id="form" v-on:submit.prevent>
 			<div class="card">
-				<div class="card-header">
+				<div class="card-header" v-bind:class="{ 'bg-danger text-white': !isOnline }">
 					<div class="container">
 						<div class="row">
 							<div class="col-sm">
-								<span v-if="!trns">
+								<span v-if="!isOnline">You are offline, please connect to a network to fetch data.</span>
+								<span v-else-if="!trns">
 									Never looked at your meal plan account before? Set your pin for the first time
 									<a href="https://mealacct.mcmaster.ca/OneWeb/Account/ResetPIN" target="_blank" rel="noopener">here</a>
 								</span>
@@ -52,7 +68,7 @@
 					</div>
 				</div>
 
-				<div class="card-body" v-if="!trns">
+				<div class="card-body" v-if="!trns && isOnline">
 					<form id="login" class="form-group" method="POST">
 						<div id="loginInputs">
 							<div>
@@ -167,8 +183,6 @@
 			</p>
 		</div>
 	</footer>
-
-	<script src="script.js"></script>
 </body>
 
 </html>

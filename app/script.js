@@ -20,7 +20,8 @@ var vm = new Vue({
     accountPin: null,
     trns: null,
     loadingData: false,
-    accountSetup: []
+    accountSetup: [],
+    isOnline: navigator.onLine
   },
   methods: {
     fetchData: function() {
@@ -60,6 +61,10 @@ var vm = new Vue({
         (this.accountSetup = []),
         (this.studentNumber = null),
         (this.accountPin = null);
+    },
+    updateConnectionStatus: function() {
+      this.isOnline = navigator.onLine;
+      console.log("Updated from vue");
     }
   },
   computed: {
@@ -203,3 +208,6 @@ var vm = new Vue({
     }
   }
 });
+
+window.addEventListener("online", vm.updateConnectionStatus);
+window.addEventListener("offline", vm.updateConnectionStatus);
