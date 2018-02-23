@@ -7,12 +7,12 @@ function elapsedDays(startDate, endDate) {
 var vm = new Vue({
   el: "#app",
   data: {
-    prcntWeekendsAway: localStorage.getItem('prcntWeekendsAway') || 10,
-    readingWeekAwayF: localStorage.getItem('readingWeekAwayF') || true,
-    readingWeekAwayW: localStorage.getItem('readingWeekAwayW') || true,
-    numIndvDaysAway: localStorage.getItem('numIndvDaysAway') || 0,
-    lastExamDayF: localStorage.getItem('lastExamDayF') || 21,
-    lastExamDayW: localStorage.getItem('lastExamDayW') || 26,
+    prcntWeekendsAway: parseInt(localStorage.getItem('prcntWeekendsAway')) || 10,
+    readingWeekAwayF: JSON.parse(localStorage.getItem('readingWeekAwayF')) || true,
+    readingWeekAwayW: JSON.parse(localStorage.getItem('readingWeekAwayW')) || true,
+    numIndvDaysAway: parseInt(localStorage.getItem('numIndvDaysAway')) || 0,
+    lastExamDayF: parseInt(localStorage.getItem('lastExamDayF')) || 21,
+    lastExamDayW: parseInt(localStorage.getItem('lastExamDayW')) || 26,
     numWeekendsAway: 0,
     payingDays: 0,
     moreOptions: false,
@@ -227,7 +227,7 @@ var vm = new Vue({
       localStorage.setItem('readingWeekAwayF', val);
     },
     readingWeekAwayW: function (val) {
-      localStorage.setItem('accoureadingWeekAwayWntPin', val);
+      localStorage.setItem('readingWeekAwayW', val);
     },
     numIndvDaysAway: function (val) {
       localStorage.setItem('numIndvDaysAway', val);
