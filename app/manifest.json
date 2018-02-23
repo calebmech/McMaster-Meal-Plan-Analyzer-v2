@@ -5,6 +5,7 @@
   "orientation": "portrait",
   "background_color": "#FAFAFA",
   "theme_color": "#007bff", 
+  "start_url": "/?utm_source=homescreen",
   "icons": [
     {
       "src": "icons/launcher-icon-1x.png",
