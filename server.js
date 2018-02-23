@@ -59,6 +59,7 @@ app.post("/api", (req, res) => {
       rp(loginOptions)
         // Returns 200 if login is bad
         .then(res => {
+          sendResults("Incorrect student number / pin");
           console.log("Incorrect student number / pin");
         })
         .catch((res, err) => {
@@ -73,7 +74,8 @@ app.post("/api", (req, res) => {
             };
 
             // Scrape Transaction History
-            rp(scrapeOptions).then($ => {
+            rp(scrapeOptions)
+            .then($ => {
               let trns = [];
 
               $("table.table > tbody > tr").each((i, elem) => {
@@ -116,13 +118,19 @@ app.post("/api", (req, res) => {
 
               console.log("Data processed");
               sendResults(trns);
-            });
+            })
+            .catch(err => {
+              sendResults("Error scraping transaction page");
+              console.log("Error scraping transaction page");
+            }) 
           } else {
+            sendResults("Error logging in:\n", res.statusCode);
             console.error("Error logging in:\n", res.statusCode);
           }
         });
     })
     .catch(err => {
+      sendResults("Error acquiring login token");
       return console.error(err);
     });
 });

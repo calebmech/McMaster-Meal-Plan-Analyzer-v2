@@ -7,19 +7,23 @@ function elapsedDays(startDate, endDate) {
 var vm = new Vue({
   el: "#app",
   data: {
-    prcntWeekendsAway: parseInt(localStorage.getItem('prcntWeekendsAway')) || 10,
-    readingWeekAwayF: JSON.parse(localStorage.getItem('readingWeekAwayF')) || true,
-    readingWeekAwayW: JSON.parse(localStorage.getItem('readingWeekAwayW')) || true,
-    numIndvDaysAway: parseInt(localStorage.getItem('numIndvDaysAway')) || 0,
-    lastExamDayF: parseInt(localStorage.getItem('lastExamDayF')) || 21,
-    lastExamDayW: parseInt(localStorage.getItem('lastExamDayW')) || 26,
+    prcntWeekendsAway:
+      parseInt(localStorage.getItem("prcntWeekendsAway")) || 10,
+    readingWeekAwayF:
+      JSON.parse(localStorage.getItem("readingWeekAwayF")) || true,
+    readingWeekAwayW:
+      JSON.parse(localStorage.getItem("readingWeekAwayW")) || true,
+    numIndvDaysAway: parseInt(localStorage.getItem("numIndvDaysAway")) || 0,
+    lastExamDayF: parseInt(localStorage.getItem("lastExamDayF")) || 21,
+    lastExamDayW: parseInt(localStorage.getItem("lastExamDayW")) || 26,
     numWeekendsAway: 0,
     payingDays: 0,
     moreOptions: false,
-    studentNumber: localStorage.getItem('studentNumber') || null,
-    accountPin: localStorage.getItem('accountPin') || null,
+    studentNumber: localStorage.getItem("studentNumber") || null,
+    accountPin: localStorage.getItem("accountPin") || null,
     trns: null,
     loadingData: false,
+    fetchError: "",
     accountSetup: [],
     isOnline: navigator.onLine
   },
@@ -38,7 +42,17 @@ var vm = new Vue({
           accountPin: this.accountPin
         })
       })
-        .then(resp => resp.json())
+        .then(resp => resp.text())
+        .then(resp => {
+          try {
+            this.fetchError = "";
+            return JSON.parse(resp);
+          } catch(err) {
+            this.fetchError = resp;
+            this.loadingData = false;
+            return Promise.reject();
+          }
+        })
         .then(data => {
           console.log("Transaction history acquired!");
           this.loadingData = false;
@@ -58,15 +72,15 @@ var vm = new Vue({
     },
     clearData: function() {
       (this.trns = null),
-      (this.accountSetup = []),
-      (this.studentNumber = null),
-      (this.accountPin = null),
-      (this.prcntWeekendsAway = 10),
-      (this.readingWeekAwayF = true),
-      (this.readingWeekAwayW = true),
-      (this.numIndvDaysAway = 0),
-      (this.lastExamDayF = 21),
-      (this.lastExamDayW = 26);
+        (this.accountSetup = []),
+        (this.studentNumber = null),
+        (this.accountPin = null),
+        (this.prcntWeekendsAway = 10),
+        (this.readingWeekAwayF = true),
+        (this.readingWeekAwayW = true),
+        (this.numIndvDaysAway = 0),
+        (this.lastExamDayF = 21),
+        (this.lastExamDayW = 26);
     },
     updateConnectionStatus: function() {
       this.isOnline = navigator.onLine;
@@ -214,31 +228,30 @@ var vm = new Vue({
     }
   },
   watch: {
-    studentNumber: function (val) {
-      localStorage.setItem('studentNumber', val);
+    studentNumber: function(val) {
+      localStorage.setItem("studentNumber", val);
     },
-    accountPin: function (val) {
-      localStorage.setItem('accountPin', val);
+    accountPin: function(val) {
+      localStorage.setItem("accountPin", val);
     },
-    prcntWeekendsAway: function (val) {
-      localStorage.setItem('prcntWeekendsAway', val);
+    prcntWeekendsAway: function(val) {
+      localStorage.setItem("prcntWeekendsAway", val);
     },
-    readingWeekAwayF: function (val) {
-      localStorage.setItem('readingWeekAwayF', val);
+    readingWeekAwayF: function(val) {
+      localStorage.setItem("readingWeekAwayF", val);
     },
-    readingWeekAwayW: function (val) {
-      localStorage.setItem('readingWeekAwayW', val);
+    readingWeekAwayW: function(val) {
+      localStorage.setItem("readingWeekAwayW", val);
     },
-    numIndvDaysAway: function (val) {
-      localStorage.setItem('numIndvDaysAway', val);
+    numIndvDaysAway: function(val) {
+      localStorage.setItem("numIndvDaysAway", val);
     },
-    lastExamDayF: function (val) {
-      localStorage.setItem('lastExamDayF', val);
+    lastExamDayF: function(val) {
+      localStorage.setItem("lastExamDayF", val);
     },
-    lastExamDayW: function (val) {
-      localStorage.setItem('lastExamDayW', val);
-    }   
-
+    lastExamDayW: function(val) {
+      localStorage.setItem("lastExamDayW", val);
+    }
   }
 });
 

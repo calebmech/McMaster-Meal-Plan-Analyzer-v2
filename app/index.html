@@ -80,10 +80,14 @@
 							</a>
 							<a href="#" class="badge badge-secondary" v-on:click.prevent="clearData">Logout</a>
 						</div>
+
 					</div>
 				</div>
 
 				<div class="card-body" v-if="!trns && isOnline">
+					<div class="alert alert-danger" role="alert" v-if="fetchError">
+						{{ fetchError }}
+					</div>
 					<form id="login" class="form-group" method="POST">
 						<div id="loginInputs">
 							<div>
