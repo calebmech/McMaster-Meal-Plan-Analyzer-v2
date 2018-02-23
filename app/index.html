@@ -37,7 +37,7 @@
 			});
 		}
 
-</script>
+	</script>
 </head>
 
 <body>
@@ -46,24 +46,23 @@
 
 		<h1 class="text-center">McMaster Meal Plan Analyzer</h1>
 		<br>
+
 		<form id="form" v-on:submit.prevent>
 			<div class="card">
 				<div class="card-header" v-bind:class="{ 'bg-danger text-white': !isOnline }">
-					<div class="container">
-						<div class="row">
-							<div class="col-sm">
-								<span v-if="!isOnline">You are offline, please connect to a network to fetch data.</span>
-								<span v-else-if="!trns">
-									Never looked at your meal plan account before? Set your pin for the first time
-									<a href="https://mealacct.mcmaster.ca/OneWeb/Account/ResetPIN" target="_blank" rel="noopener">here</a>
-								</span>
-								<span v-else>
-									Transaction history for {{ studentNumber }}
-								</span>
-							</div>
-							<div class="col-sm-auto" v-if="trns">
-								<a href="#" class="badge badge-secondary" v-on:click.prevent="clearData">Logout</a>
-							</div>
+					<div class="row">
+						<div class="col-sm">
+							<span v-if="!isOnline">You are offline, please connect to a network to fetch data.</span>
+							<span v-else-if="!trns">
+								Never looked at your meal plan account before? Set your pin for the first time
+								<a href="https://mealacct.mcmaster.ca/OneWeb/Account/ResetPIN" target="_blank" rel="noopener">here</a>
+							</span>
+							<span v-else>
+								Transaction history for {{ studentNumber }}
+							</span>
+						</div>
+						<div class="col-sm-auto" v-if="trns">
+							<a href="#" class="badge badge-secondary" v-on:click.prevent="clearData">Logout</a>
 						</div>
 					</div>
 				</div>
@@ -78,7 +77,7 @@
 							<br>
 							<div>
 								<label for="accountPin">Account Pin:</label>
-								<input v-model="accountPin" type="password" pattern="[0-9]*" name="accountPin" id="accountPin" class="form-control">
+								<input v-model="accountPin" type="password" pattern="[0-9]*" inputmode="numeric" name="accountPin" id="accountPin" class="form-control" maxlength="4">
 							</div>
 						</div>
 						<br>
@@ -89,100 +88,102 @@
 				</div>
 			</div>
 			<br>
-			<div id="options">
-				<div class="form-group">
-					<label for="prcntWeekendsAway">Percentage of weekends away:</label>
-					<div class="input-group">
-						<input type="number" class="form-control" min="0" max="100" step="1" name="prcntWeekendsAway" id="prcntWeekendsAway" placeholder="0"
-						 v-model="prcntWeekendsAway">
-						<span class="input-group-addon">%</span>
-					</div>
-				</div>
-				<div class="form-group">
-					<p>Reading weeks away:</p>
-					<div class="form-check">
-						<label class="form-check-label">
-							<input class="form-check-input" type="checkbox" name="awayFallReadingWeek" id="awayFallReadingWeek" v-model="readingWeekAwayF"> Fall reading week
-						</label>
-					</div>
-					<div class="form-check">
-						<label class="form-check-label">
-							<input class="form-check-input" type="checkbox" name="awayWinterReadingWeek" id="awayWinterReadingWeek" v-model="readingWeekAwayW"> Winter reading week
-						</label>
-					</div>
-				</div>
-
-
-				<div class="card">
-					<div class="card-header">
-						<a href="#" v-if="moreOptions" v-on:click.prevent="moreOptions = false">Fewer Options</a>
-						<a href="#" v-else v-on:click.prevent="moreOptions = true">More Options</a>
-					</div>
-					<transition name="fade">
-						<div id="moreOptions" class="card-body" v-if="moreOptions">
-							<div class="form-group">
-								<label for="extraDaysAway">Extra Days Away:</label>
-								<input type="number" name="extraDaysAway" id="extraDaysAway" placeholder="0" v-model="numIndvDaysAway" class="form-control">
+			<transition name="fade">
+				<div id="trnsDataWrapper" v-if="trns">
+					<div id="options">
+						<div class="form-group">
+							<label for="prcntWeekendsAway">Percentage of weekends away:</label>
+							<div class="input-group">
+								<input type="number" class="form-control" min="0" max="100" step="1" name="prcntWeekendsAway" id="prcntWeekendsAway" placeholder="0"
+								 v-model="prcntWeekendsAway">
+								<span class="input-group-addon">%</span>
 							</div>
-
-							<div class="form-group">
-								<label for="lastExamDayFall">Last fall exam day:</label>
-								<input type="number" name="lastExamDayFall" id="lastExamDayFall" placeholder="Default: 21" v-model="lastExamDayF" class="form-control">
-								<label for="lastExamDayWinter">Last winter exam day:</label>
-								<input type="number" name="lastExamDayWinter" id="lastExamDayWinter" placeholder="Default: 26" v-model="lastExamDayW" class="form-control">
+						</div>
+						<div class="form-group">
+							<p>Reading weeks away:</p>
+							<div class="form-check">
+								<label class="form-check-label">
+									<input class="form-check-input" type="checkbox" name="awayFallReadingWeek" id="awayFallReadingWeek" v-model="readingWeekAwayF"> Fall reading week
+								</label>
 							</div>
-					</transition>
-					</div>
-				</div>
-			</div>
+							<div class="form-check">
+								<label class="form-check-label">
+									<input class="form-check-input" type="checkbox" name="awayWinterReadingWeek" id="awayWinterReadingWeek" v-model="readingWeekAwayW"> Winter reading week
+								</label>
+							</div>
+						</div>
+
+
+						<div class="card">
+							<div class="card-header">
+								<a href="#" v-if="moreOptions" v-on:click.prevent="moreOptions = false">Fewer Options</a>
+								<a href="#" v-else v-on:click.prevent="moreOptions = true">More Options</a>
+							</div>
+							<transition name="fade">
+								<div id="moreOptions" class="card-body" v-if="moreOptions">
+									<div class="form-group">
+										<label for="extraDaysAway">Extra Days Away:</label>
+										<input type="number" name="extraDaysAway" id="extraDaysAway" placeholder="0" v-model="numIndvDaysAway" class="form-control">
+									</div>
+
+									<div class="form-group">
+										<label for="lastExamDayFall">Last fall exam day:</label>
+										<input type="number" name="lastExamDayFall" id="lastExamDayFall" placeholder="Default: 21" v-model="lastExamDayF" class="form-control">
+										<label for="lastExamDayWinter">Last winter exam day:</label>
+										<input type="number" name="lastExamDayWinter" id="lastExamDayWinter" placeholder="Default: 26" v-model="lastExamDayW" class="form-control">
+									</div>
+							</transition>
+							</div>
+						</div>
+
 		</form>
 
-		<transition name="fade">
-			<div id="output-data" v-if="trns">
-				<hr id="io-seperator">
 
-				<p class="h3" id="avgSpent">It costs you
-					<span class="output" v-bind:style="{ color: spendingColor }">${{ costPerDay }}</span> to eat for a day</p>
+		<div id="output-data" v-if="trns">
+			<hr id="io-seperator">
 
-				<p class="h4" id="allowedSpending">You are allowed to spend
-					<span class="output">${{ allowedSpending }}</span> per day</p>
-				<br>
-				<ul class="list-group">
-					<li class="list-group-item">
-						<div class="row justify-content-start">
-							<span class="col-md-auto">On average, you spend
-								<span class="output">${{ avgSpent }}</span> per day &emsp;</span>
-							<span class="text-muted font-italic col-md-auto">This includes days that you don't purchase anything</span>
-						</div>
-					</li>
-					<li class="list-group-item">You have spent
-						<span class="output">${{ totalSpent }}</span> in total and
-						<span class="output">${{ pastWeekAmount }}</span> in the past 7 days</li>
-					<li class="list-group-item">You have
-						<span class="output">${{ amountRemaining }}</span> remaining</li>
-					<li v-if="remainingAmountAvg > 0" class="list-group-item">If you continue with your current spending, you will have
-						<span class="output">${{ remainingAmountAvg }}</span> remaining at the end of the year</li>
-					<li v-else class="list-group-item">If you continue with your current spending, you will need to add
-						<span class="output">${{ -remainingAmountAvg }}</span> to your account</li>
-				</ul>
+			<p class="h3" id="avgSpent">It costs you
+				<span class="output" v-bind:style="{ color: spendingColor }">${{ costPerDay }}</span> to eat for a day</p>
 
-			</div>
+			<p class="h4" id="allowedSpending">You are allowed to spend
+				<span class="output">${{ allowedSpending }}</span> per day</p>
+			<br>
+			<ul class="list-group">
+				<li class="list-group-item">
+					<div class="row justify-content-start">
+						<span class="col-md-auto">On average, you spend
+							<span class="output">${{ avgSpent }}</span> per day &emsp;</span>
+						<span class="text-muted font-italic col-md-auto">This includes days that you don't purchase anything</span>
+					</div>
+				</li>
+				<li class="list-group-item">You have spent
+					<span class="output">${{ totalSpent }}</span> in total and
+					<span class="output">${{ pastWeekAmount }}</span> in the past 7 days</li>
+				<li class="list-group-item">You have
+					<span class="output">${{ amountRemaining }}</span> remaining</li>
+				<li v-if="remainingAmountAvg > 0" class="list-group-item">If you continue with your current spending, you will have
+					<span class="output">${{ remainingAmountAvg }}</span> remaining at the end of the year</li>
+				<li v-else class="list-group-item">If you continue with your current spending, you will need to add
+					<span class="output">${{ -remainingAmountAvg }}</span> to your account</li>
+			</ul>
+		</div>
+		</div>
 		</transition>
 
 
-	</div>
-	</transition>
-
-	<footer id="mainFooter">
-		<div id="mainFooterWrapper">
-			<p>Created by Caleb Mech |
-				<a href="https://github.com/cmech/McMaster-Meal-Plan-Analyzer">GitHub</a>
-			</p>
-			<p>
-				<span class="text-muted font-italic"> I am not responsible for any misinformation that you may recieve while using this site. </span>
-			</p>
 		</div>
-	</footer>
+		</transition>
+
+		<footer id="mainFooter">
+			<div id="mainFooterWrapper">
+				<p>Created by Caleb Mech |
+					<a href="https://github.com/cmech/McMaster-Meal-Plan-Analyzer">GitHub</a>
+				</p>
+				<p>
+					<span class="text-muted font-italic"> I am not responsible for any misinformation that you may recieve while using this site. </span>
+				</p>
+			</div>
+		</footer>
 </body>
 
 </html>
