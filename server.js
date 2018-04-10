@@ -84,7 +84,7 @@ app.post("/api", (req, res) => {
                   .html();
                 let date = dateTime.match(/\d{2}\/\d{2}\/\d{4}/g)[0];
                 let time = dateTime.match(/\d{1,2}:\d{2}:\d{2} (?:PM|AM)/g)[0];
-                console.log(date);
+
                 trns[i] = {
                   date: date,
                   time: time,
