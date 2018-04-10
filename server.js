@@ -15,7 +15,7 @@ rp = rp.defaults({ jar: jar });
 // Setup Request Options
 const loginPage = "https://mealacct.mcmaster.ca/OneWeb/Account/LogOn";
 const transactionPage =
-  "https://mealacct.mcmaster.ca/OneWeb/Financial/TransactionsPass?dateFrom=2016%2F01%2F13+00%3A00%3A00&dateTo=2018%2F02%2F13+23%3A59%3A59&returnRows=1000&_=" +
+  "https://mealacct.mcmaster.ca/OneWeb/Financial/TransactionsPass?dateFrom=2016%2F01%2F13+00%3A00%3A00&dateTo=2100%2F08%2F13+23%3A59%3A59&returnRows=1000&_=" +
   Date.now();
 
 // Handle API Call
@@ -84,7 +84,7 @@ app.post("/api", (req, res) => {
                   .html();
                 let date = dateTime.match(/\d{2}\/\d{2}\/\d{4}/g)[0];
                 let time = dateTime.match(/\d{1,2}:\d{2}:\d{2} (?:PM|AM)/g)[0];
-
+                console.log(date);
                 trns[i] = {
                   date: date,
                   time: time,
