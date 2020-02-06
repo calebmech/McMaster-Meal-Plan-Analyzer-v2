@@ -105,13 +105,16 @@
 						<br>
 						<button v-on:click="fetchData" type="submit" class="form-control btn btn-primary">
 							<span v-if="loadingData">Loading...</span>
-							<span v-else="loadingData">Get transactions</span </button>
+							<span v-else="loadingData">Get transactions</span>
+						</button>
 					</form>
 				</div>
 			</div>
-			<br>
+			<div class="alert alert-warning mt-4" role="alert" v-if="!trns">
+				Trying the app out and don't have a McMaster Meal Plan account? Use student number <kbd>400120999</kbd> and account pin <kbd>1234</kbd>
+			</div>
 			<transition name="fade">
-				<div id="trnsDataWrapper" v-if="trns">
+				<div id="trnsDataWrapper" class="mt-4" v-if="trns">
 					<div id="options">
 						<div class="form-group">
 							<label for="prcntWeekendsAway">Percentage of weekends away:</label>

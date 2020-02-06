@@ -1,25 +1,26 @@
-const express = require("express");
-let rp = require("request-promise");
-const bodyParser = require("body-parser");
-const cheerio = require("cheerio");
+const express = require('express');
+let rp = require('request-promise');
+const bodyParser = require('body-parser');
+const cheerio = require('cheerio');
+const sampleData = require('./sample_data');
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(express.static("app"));
+app.use(express.static('app'));
 
 // Setup Cookie Jar
 let jar = rp.jar();
 rp = rp.defaults({ jar: jar });
 
 // Setup Request Options
-const loginPage = "https://mealacct.mcmaster.ca/OneWeb/Account/LogOn";
+const loginPage = 'https://mealacct.mcmaster.ca/OneWeb/Account/LogOn';
 const transactionPage =
-  "https://mealacct.mcmaster.ca/OneWeb/Financial/TransactionsPass?dateFrom=2016%2F01%2F13+00%3A00%3A00&dateTo=2100%2F08%2F13+23%3A59%3A59&returnRows=1000&_=" +
+  'https://mealacct.mcmaster.ca/OneWeb/Financial/TransactionsPass?dateFrom=2016%2F01%2F13+00%3A00%3A00&dateTo=2100%2F08%2F13+23%3A59%3A59&returnRows=1000&_=' +
   Date.now();
 
 // Handle API Call
-app.post("/api", (req, res) => {
+app.post('/api', (req, res) => {
   // Clear cookie jar on each request
   jar = rp.jar();
 
@@ -38,19 +39,22 @@ app.post("/api", (req, res) => {
     res.send(data);
   }
 
+  if (+studentNumber === 400120999 && +accountPin === 1234)
+    return sendResults(sampleData);
+
   // Acquire Login Token
   rp(getTokenOptions)
     .then($ => {
-      token = $("[name=__RequestVerificationToken]").val();
+      token = $('[name=__RequestVerificationToken]').val();
       params = {
         __RequestVerificationToken: token,
         Account: studentNumber,
         Password: accountPin
       };
-      console.log("Request Token Acquired");
+      console.log('Request Token Acquired');
 
       const loginOptions = {
-        method: "POST",
+        method: 'POST',
         uri: loginPage,
         form: params
       };
@@ -59,12 +63,12 @@ app.post("/api", (req, res) => {
       rp(loginOptions)
         // Returns 200 if login is bad
         .then(res => {
-          sendResults("Incorrect student number / pin");
-          console.log("Incorrect student number / pin");
+          sendResults('Incorrect student number / pin');
+          console.log('Incorrect student number / pin');
         })
         .catch((res, err) => {
           if (res.statusCode == 302) {
-            console.log("Logged in");
+            console.log('Logged in');
 
             const scrapeOptions = {
               uri: transactionPage,
@@ -75,62 +79,64 @@ app.post("/api", (req, res) => {
 
             // Scrape Transaction History
             rp(scrapeOptions)
-            .then($ => {
-              let trns = [];
+              .then($ => {
+                let trns = [];
 
-              $("table.table > tbody > tr").each((i, elem) => {
-                let dateTime = $(elem)
-                  .children('td[data-title="Date:"]')
-                  .html();
-                let date = dateTime.match(/\d{2}\/\d{2}\/\d{4}/g)[0];
-                let time = dateTime.match(/\d{1,2}:\d{2}:\d{2} (?:PM|AM)/g)[0];
+                $('table.table > tbody > tr').each((i, elem) => {
+                  let dateTime = $(elem)
+                    .children('td[data-title="Date:"]')
+                    .html();
+                  let date = dateTime.match(/\d{2}\/\d{2}\/\d{4}/g)[0];
+                  let time = dateTime.match(
+                    /\d{1,2}:\d{2}:\d{2} (?:PM|AM)/g
+                  )[0];
 
-                trns[i] = {
-                  date: date,
-                  time: time,
-                  amount: $(elem)
-                    .children('td[data-title="Amount:"]')
-                    .html()
-                    .replace(",", ""),
-                  account: parseInt(
-                    $(elem)
-                      .children('td[data-title="Balance:"]')
+                  trns[i] = {
+                    date: date,
+                    time: time,
+                    amount: $(elem)
+                      .children('td[data-title="Amount:"]')
                       .html()
-                  ),
-                  desposit: parseInt(
-                    $(elem)
-                      .children('td[data-title="Units:"]')
+                      .replace(',', ''),
+                    account: parseInt(
+                      $(elem)
+                        .children('td[data-title="Balance:"]')
+                        .html()
+                    ),
+                    desposit: parseInt(
+                      $(elem)
+                        .children('td[data-title="Units:"]')
+                        .html()
+                    ),
+                    trantype: $(elem)
+                      .children('td[data-title="Trantype:"]')
                       .html()
-                  ),
-                  trantype: $(elem)
-                    .children('td[data-title="Trantype:"]')
-                    .html()
-                    .trim(),
-                  terminal: $(elem)
-                    .children('td[data-title="Terminal:"]')
-                    .html()
-                    .trim()
-                    .slice(8) // Fix this hack with regex
-                };
+                      .trim(),
+                    terminal: $(elem)
+                      .children('td[data-title="Terminal:"]')
+                      .html()
+                      .trim()
+                      .slice(8) // Fix this hack with regex
+                  };
+                });
+
+                trns.reverse();
+
+                console.log('Data processed');
+                sendResults(trns);
+              })
+              .catch(err => {
+                sendResults('Error scraping transaction page');
+                console.log('Error scraping transaction page');
               });
-
-              trns.reverse();
-
-              console.log("Data processed");
-              sendResults(trns);
-            })
-            .catch(err => {
-              sendResults("Error scraping transaction page");
-              console.log("Error scraping transaction page");
-            }) 
           } else {
-            sendResults("Error logging in:\n", res.statusCode);
-            console.error("Error logging in:\n", res.statusCode);
+            sendResults('Error logging in:\n', res.statusCode);
+            console.error('Error logging in:\n', res.statusCode);
           }
         });
     })
     .catch(err => {
-      sendResults("Error acquiring login token");
+      sendResults('Error acquiring login token');
       return console.error(err);
     });
 });
@@ -138,4 +144,4 @@ app.post("/api", (req, res) => {
 const port = process.env.PORT || 3000;
 app.listen(port);
 
-console.log("Magic happens on port", port);
+console.log('Magic happens on port', port);
